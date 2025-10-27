@@ -3,13 +3,14 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration
-from launch_ros.actions import ComposableNodeContainer
+from launch_ros.actions import ComposableNodeContainer, Node
 from launch_ros.descriptions import ComposableNode
 
 def generate_launch_description():
 
     pkg_path = get_package_share_directory('estimate_markers_poses')
     param_config = os.path.join(pkg_path, 'config', 'isaac_apriltag.yaml')
+    rviz_scene = os.path.join(pkg_path, 'rviz', 'tf_visualization.rviz')
 
     set_use_sim_time = DeclareLaunchArgument('use_sim_time', default_value='True')
     use_sim_time = LaunchConfiguration("use_sim_time")
@@ -52,4 +53,15 @@ def generate_launch_description():
         parameters=[{'use_sim_time': True}],
     )
 
-    return LaunchDescription([set_use_sim_time,container])
+    rviz_node = Node(
+        package='rviz2',
+        executable='rviz2',
+        name='rviz2',
+        output='screen',
+        arguments=['-d', rviz_scene], 
+        parameters=[{'use_sim_time': use_sim_time}] 
+    )
+
+    return LaunchDescription([set_use_sim_time,
+                              container,
+                              rviz_node])
