@@ -1,0 +1,15 @@
+# Nome do nó que vai ler este arquivo
+polygon_builder_node:
+  ros__parameters:
+    
+    # O referencial "pai" no qual o polígono será publicado
+    target_frame: "World"
+    
+    # O prefixo usado para construir o nome do frame da tag
+    tag_prefix: "tag"
+
+    # Lista de todos os obstáculos
+    obstacles:
+      - name: "wall"
+        # IDs das tags, NA ORDEM em que devem ser conectadas
+        ids: [241, 242, 244, 243]
