@@ -14,20 +14,21 @@ class PolygonBuilderNode(Node):
         super().__init__('polygon_builder_node')
 
         # --- Parameters ---
+        # this parameters is for .yaml parsing, which is not working correctly...
         # self.declare_parameter('target_frame', 'World')
         # self.declare_parameter('tag_prefix', 'tag')
         # self.declare_parameter('obstacles', [])
 
+        # define the obstacles parameters
         self.target_frame = "World"
         self.tag_prefix = "tag"
         self.obstacle_definitions = [
             {
                 'name': "wall",
-                # IDs das tags, NA ORDEM em que devem ser conectadas
-                # (Baseado nas suas imagens, 241-242-244-243 parecia formar um retângulo)
+                # tag ids, in the order that it should be connected
                 'ids': [241, 242, 243, 244]
             }
-            # Se quisesse mais obstáculos, bastava adicionar aqui:
+            # if you want more obstacles, just add below:
             # ,{
             #     'name': "column",
             #     'ids': [10, 11, 12]
@@ -59,6 +60,9 @@ class PolygonBuilderNode(Node):
         self.timer = self.create_timer(0.1, self.build_polygons_callback)
 
     def build_polygons_callback(self):
+        '''
+        Callback function that listens to the tf tree and publish the Polygon and MarkerArray msgs
+        '''
         # create an empty list of markers
         marker_array_msg = MarkerArray()
         # get the actual ROS time
@@ -107,43 +111,44 @@ class PolygonBuilderNode(Node):
                 except (LookupException, ConnectivityException, ExtrapolationException) as e:
                     all_tags_found = False
                     break
-
+            
+            # if it is possible to found the tags
             if all_tags_found and points_stamped:
-                # 1. Publica a mensagem PolygonStamped
+                # publish the PolygonStamped msg
                 polygon_msg.polygon.points = points_stamped
                 self.polygon_pubs[name].publish(polygon_msg)
                 
-                # 2. Cria o Marcador para o RViz
+                # create and publish the marker array msg
                 marker = self.create_obstacle_marker(name, i, polygon_msg.header, points_marker)
                 marker_array_msg.markers.append(marker)
                 self.marker_pub.publish(marker_array_msg)
         
     def create_obstacle_marker(self, name, marker_id, header, points):
         """
-        Função auxiliar para criar um marcador LINE_STRIP verde para o RViz.
+        Function for creating the polygon marker used in RViZ visualization.
         """
         marker = Marker()
         marker.header = header
-        marker.ns = "obstacle_footprints" # Agrupa todos os obstáculos no RViz
-        marker.id = marker_id             # ID único para este obstáculo (0, 1, 2...)
-        marker.type = Marker.LINE_STRIP   # Desenha linhas entre os pontos
-        marker.action = Marker.ADD        # Adiciona ou atualiza o marcador
+        marker.ns = "obstacle_footprints" # group all the objects on RViZ 
+        marker.id = marker_id             # unique obstacle id 
+        marker.type = Marker.LINE_STRIP   # the line type between points 
+        marker.action = Marker.ADD        # add the marker
         
-        # Define os vértices do marcador
+        # define the marker vertex 
         marker.points = points
-        # Conecta o último ponto de volta ao primeiro para "fechar" o polígono
+        # conect the last to the first point 
         if len(points) > 1:
             marker.points.append(points[0]) 
 
-        # Define as propriedades visuais
-        marker.scale.x = 0.05  # Espessura da linha de 5cm
+        # define the visual properties 
+        marker.scale.x = 0.05  
         marker.color = ColorRGBA()
         marker.color.r = 0.0
-        marker.color.g = 1.0  # Verde
+        marker.color.g = 1.0  
         marker.color.b = 0.0
-        marker.color.a = 0.8  # 80% de opacidade
+        marker.color.a = 0.8  
         
-        # Define o tempo de vida (deve ser > que o período do timer)
+        # define the lifetime - should be larger than the callback timer
         marker.lifetime = Duration(seconds=0.5).to_msg()
         
         return marker
