@@ -14,7 +14,7 @@ def generate_launch_description():
     declare_use_sim_time_arg = DeclareLaunchArgument('use_sim_time',default_value='True')
     use_sim_time = LaunchConfiguration('use_sim_time')
 
-    # 6. Definir a ação de iniciar o Nó
+    # definir a ação de iniciar o Nó
     polygon_builder_node = Node(
         package=package_name,
         executable='build_polygons.py', 
@@ -26,7 +26,7 @@ def generate_launch_description():
         ]
     )
 
-    # 7. Retornar a descrição do lançamento
+    
     return LaunchDescription([
         declare_use_sim_time_arg,
         polygon_builder_node
