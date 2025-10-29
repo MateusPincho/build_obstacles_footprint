@@ -29,3 +29,11 @@ The system is composed by three main components:
 
 - Publishes the obstacles as `geometry_msgs/PolygonStamped` and `visualization_msgs/MarkerArray`.
 
+## Dependencies
+
+This projects depends on two packages: `apriltag-ros` and `image_pipeline`. To install it, execute: 
+
+```
+sudo apt install ros-jazzy-apriltag-ros ros-jazzy-image-common
+```
+
