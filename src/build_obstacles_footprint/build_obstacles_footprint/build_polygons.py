@@ -105,7 +105,7 @@ class PolygonBuilderNode(Node):
                     pt = Point()
                     pt.x = float(pos.x)
                     pt.y = float(pos.y)
-                    pt.z = float(pos.z)
+                    pt.z = float(0.0)
                     points_marker.append(pt)
                 
                 except (LookupException, ConnectivityException, ExtrapolationException) as e:
