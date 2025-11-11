@@ -1,0 +1,28 @@
+ # Arquivo de calibração da câmera IMX219 (1920x1080)
+
+image_width: 960
+image_height: 720
+camera_name: imx219
+camera_matrix:
+  rows: 3
+  cols: 3
+  data: [768.113,   0.0,     472.596,
+           0.0,   767.935,   350.978,
+           0.0,     0.0,       1.0]
+distortion_model: "equidistant"
+distortion_coefficients:
+  rows: 1
+  cols: 4
+  data: [0.368917, 1.50111, -7.94126, 11.9171]
+rectification_matrix:
+  rows: 3
+  cols: 3
+  data: [1.0, 0.0, 0.0,
+         0.0, 1.0, 0.0,
+         0.0, 0.0, 1.0]
+projection_matrix:
+  rows: 3
+  cols: 4
+  data: [768.113,   0.0,     472.596,   0.0,
+           0.0,   767.935,   350.978,   0.0,
+           0.0,     0.0,       1.0,     0.0]
