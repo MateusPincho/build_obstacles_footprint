@@ -9,7 +9,8 @@ from launch_ros.descriptions import ComposableNode
 def generate_launch_description():
 
     pkg_path = get_package_share_directory('estimate_markers_poses')
-    param_config = os.path.join(pkg_path, 'config', 'lima_apriltag.yaml')
+    tag_param = os.path.join(pkg_path, 'config', 'lima_apriltag.yaml')
+    pose_param = os.path.join(pkg_path, 'config', 'camera_pose.yaml')
     rviz_scene = os.path.join(pkg_path, 'rviz', 'tf_visualization.rviz')
 
     set_use_sim_time = DeclareLaunchArgument('use_sim_time', default_value='False')
@@ -39,7 +40,7 @@ def generate_launch_description():
                 ('image_rect', 'image_rect'),
                 ('camera_info', 'camera/camera_info')
             ],
-            parameters=[param_config, {'use_sim_time': False}],
+            parameters=[tag_param, {'use_sim_time': False}],
             extra_arguments=[{'use_intra_process_comms': True}]
         )        
     ]
@@ -62,6 +63,15 @@ def generate_launch_description():
         parameters=[{'use_sim_time': use_sim_time}] 
     )
 
+    camera_pose_publisher = Node(
+        package='estimate_markers_poses',
+        executable='publish_camera_pose.py',
+        name='camera_pose_publisher',
+        parameters=[{'config_file': pose_param}],
+        output='screen',
+    )
+
     return LaunchDescription([set_use_sim_time,
                               container,
+                              camera_pose_publisher,
                               rviz_node])

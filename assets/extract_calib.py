@@ -10,7 +10,7 @@ from virtualmocap.vision.camera import Camera
 
 CALIB_FOLDER = '25-10-24-17-47-24'
 ARQUIVO_PKL_ENTRADA = f'assets/calibration/{CALIB_FOLDER}/E45F019003BA.pkl' 
-ARQUIVO_YAML_SAIDA = 'camera_pose.yaml' 
+ARQUIVO_YAML_SAIDA = 'src/estimate_markers_poses/config/camera_pose.yaml' 
 
 
 def main():
@@ -62,19 +62,17 @@ def main():
 
     # Converte numpy para listas Python
     t_list = t_vector.tolist()
-    R_list_flat = R_matrix.flatten().tolist()
+    R_list_flat = R_matrix.tolist()
 
     # Monta o dicionário final no formato exato que o nó ROS espera
     dados_para_yaml = {
-        'calibration_publisher_node': {
-            'ros__parameters': {
-                'target_frame': 'World', 
-                'child_frame': 'camera',
-                'translation': t_list,
-                'rotation_matrix': R_list_flat
+        'static_tf': {
+            'target_frame': 'World', 
+            'child_frame': 'camera',
+            'translation': t_list,
+            'rotation_matrix': R_list_flat
             }
         }
-    }
     
     print("\nDados formatados para o YAML:")
     print(dados_para_yaml)
