@@ -4,7 +4,7 @@
 
 This project implements a full pipeline of detecting AprilTag Markers in a scene (real or simulated) and dynamicly generate obstacles footprints based on polygons.  The system is design for allowing quickly creation of obstacles for mobile navigation tests, by simply arranging them on the scene floor.
 
-![](assets/video-polygons.gif)
+![](docs/video-polygons.gif)
 
 ## Architecture
 
